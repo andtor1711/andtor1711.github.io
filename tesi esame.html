@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tesina - Sistema di Gestione Rete Aziendale "gestionerete"</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --light: #ecf0f1;
+            --dark: #34495e;
+            --success: #27ae60;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            background-color: #f5f5f5;
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            border-radius: 0 0 10px 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-style: italic;
+            opacity: 0.9;
+        }
+        
+        h2 {
+            color: var(--primary);
+            border-bottom: 3px solid var(--secondary);
+            padding-bottom: 8px;
+            margin-top: 40px;
+            font-size: 1.8em;
+        }
+        
+        h3 {
+            color: var(--dark);
+            margin-top: 25px;
+            font-size: 1.4em;
+            border-left: 4px solid var(--secondary);
+            padding-left: 10px;
+        }
+        
+        section {
+            background-color: white;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        
+        .image-container {
+            text-align: center;
+            margin: 25px 0;
+            background-color: var(--light);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .image-container p {
+            margin-top: 10px;
+            font-style: italic;
+            color: #666;
+        }
+        
+        .code-block {
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--secondary);
+            padding: 15px;
+            font-family: 'Courier New', Courier, monospace;
+            overflow-x: auto;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+            font-size: 0.95em;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+        }
+        
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .highlight {
+            background-color: #fffde7;
+            padding: 3px 6px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+        
+        .math {
+            font-family: 'Times New Roman', Times, serif;
+            font-style: italic;
+            background-color: #f0f8ff;
+            padding: 10px;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 10px 0;
+        }
+        
+        .conclusion {
+            background-color: #e8f5e9;
+            padding: 20px;
+            border-left: 4px solid var(--success);
+            border-radius: 0 4px 4px 0;
+            margin: 30px 0;
+        }
+        
+        .conclusion h3 {
+            border-left: none;
+            padding-left: 0;
+            color: var(--success);
+            margin-top: 0;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 10px 10px 0 0;
+            font-size: 0.9em;
+        }
+        
+        .nav {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .nav a {
+            padding: 10px 20px;
+            background-color: var(--secondary);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            transition: all 0.3s;
+            font-weight: 500;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .nav a:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 0 15px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            h2 {
+                font-size: 1.5em;
+            }
+            
+            section {
+                padding: 20px 15px;
+            }
+            
+            .nav {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav a {
+                width: 90%;
+                text-align: center;
+                margin-bottom: 5px;
+            }
+        }
+        
+        /* Stile per le liste */
+        ul, ol {
+            padding-left: 20px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        /* Stile per i link */
+        a {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Sistema di Gestione Rete Aziendale "gestionerete"</h1>
+        <p class="subtitle">Tesina per l'Esame di Stato - Anno Scolastico 2024/2025</p>
+    </header>
+
+    <div class="nav">
+        <a href="#introduzione">Introduzione</a>
+        <a href="#database">Database</a>
+        <a href="#funzionalita">Funzionalità</a>
+        <a href="#rete">Rete Simulata</a>
+        <a href="#bayes">Teorema di Bayes</a>
+        <a href="#vpn">Sicurezza con VPN</a>
+        <a href="#pirandello">Pirandello</a>
+        <a href="#guerrafredda">Guerra Fredda</a>
+        <a href="#conclusioni">Conclusioni</a>
+    </div>
+
+    <section id="introduzione">
+        <h2>Introduzione</h2>
+        <p>Il progetto <strong>"gestionerete"</strong> rappresenta una soluzione completa per il monitoraggio e la gestione di reti aziendali, sviluppato attraverso un approccio multidisciplinare che unisce competenze informatiche, matematiche e umanistiche.</p>
+        
+        <p>Il sistema è stato realizzato utilizzando le seguenti tecnologie:</p>
+        <ul>
+            <li><strong>MySQL</strong> per la gestione del database relazionale</li>
+            <li><strong>PHP</strong> per lo sviluppo del backend</li>
+            <li><strong>Packet Tracer</strong> per la simulazione e progettazione della rete</li>
+            <li><strong>Eventi e procedure SQL</strong> per l'automazione dei processi</li>
+        </ul>
+        
+        <p>Le principali funzionalità offerte dal sistema includono:</p>
+        <ul>
+            <li>Monitoraggio in tempo reale dello stato dei dispositivi (Online/Offline)</li>
+            <li>Generazione automatica di allarmi in caso di guasti o anomalie</li>
+            <li>Assegnazione di dispositivi a utenti specifici per una migliore tracciabilità</li>
+            <li>Automazione dei processi di controllo attraverso eventi schedulati</li>
+        </ul>
+        
+        <div class="image-container">
+            <img src="foto2.png" alt="Architettura del sistema gestionerete">
+            <p>Diagramma dell'architettura del sistema</p>
+        </div>
+    </section>
+
+    <section id="database">
+        <h2>Struttura del Database</h2>
+        <p>Il cuore del sistema risiede nel database relazionale <strong>"gestionerete"</strong>, progettato per garantire efficienza e scalabilità. La struttura è composta da quattro tabelle principali interconnesse:</p>
+        
+        <h3>Tabella Dispositivi</h3>
+        <table>
+            <tr>
+                <th>Campo</th>
+                <th>Tipo</th>
+                <th>Descrizione</th>
+            </tr>
+            <tr>
+                <td>ID_D</td>
+                <td>INT (PK)</td>
+                <td>Identificativo univoco del dispositivo</td>
+            </tr>
+            <tr>
+                <td>Indirizzo_IP</td>
+                <td>VARCHAR(15)</td>
+                <td>Indirizzo IP del dispositivo</td>
+            </tr>
+            <tr>
+                <td>Indirizzo_MAC</td>
+                <td>VARCHAR(17)</td>
+                <td>Indirizzo MAC del dispositivo</td>
+            </tr>
+            <tr>
+                <td>Tipo_Dispositivo</td>
+                <td>ENUM</td>
+                <td>Tipologia (PC, Stampante, Router, Server)</td>
+            </tr>
+            <tr>
+                <td>Stato</td>
+                <td>ENUM</td>
+                <td>Stato corrente (Online/Offline)</td>
+            </tr>
+            <tr>
+                <td>ID_US</td>
+                <td>INT (FK)</td>
+                <td>Chiave esterna all'utente assegnato</td>
+            </tr>
+        </table>
+
+        <h3>Tabella User</h3>
+        <table>
+            <tr>
+                <th>Campo</th>
+                <th>Tipo</th>
+                <th>Descrizione</th>
+            </tr>
+            <tr>
+                <td>ID_US</td>
+                <td>INT (PK)</td>
+                <td>Identificativo univoco dell'utente</td>
+            </tr>
+            <tr>
+                <td>Username</td>
+                <td>VARCHAR(30)</td>
+                <td>Nome utente per l'accesso</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>VARCHAR(50)</td>
+                <td>Indirizzo email</td>
+            </tr>
+            <tr>
+                <td>Ruolo</td>
+                <td>ENUM</td>
+                <td>Tipologia utente (amministratore, operatore)</td>
+            </tr>
+            <tr>
+                <td>Data_Registrazione</td>
+                <td>DATETIME</td>
+                <td>Data di registrazione</td>
+            </tr>
+            <tr>
+                <td>Ultimo_Login</td>
+                <td>DATETIME</td>
+                <td>Data e ora dell'ultimo accesso</td>
+            </tr>
+        </table>
+
+        <h3>Tabella Info</h3>
+        <p>Questa tabella contiene informazioni tecniche aggiuntive sui dispositivi:</p>
+        <table>
+            <tr>
+                <th>Campo</th>
+                <th>Tipo</th>
+                <th>Descrizione</th>
+            </tr>
+            <tr>
+                <td>ID_I</td>
+                <td>INT (PK)</td>
+                <td>Identificativo univoco</td>
+            </tr>
+            <tr>
+                <td>Porta</td>
+                <td>INT</td>
+                <td>Porta di comunicazione principale</td>
+            </tr>
+            <tr>
+                <td>Protocollo</td>
+                <td>VARCHAR(20)</td>
+                <td>Protocollo utilizzato</td>
+            </tr>
+            <tr>
+                <td>Funzionalità</td>
+                <td>TEXT</td>
+                <td>Descrizione delle funzionalità</td>
+            </tr>
+            <tr>
+                <td>ID_D</td>
+                <td>INT (FK)</td>
+                <td>Chiave esterna al dispositivo</td>
+            </tr>
+        </table>
+
+        <h3>Tabella Allarmi</h3>
+        <p>Registra tutti gli allarmi generati dal sistema:</p>
+        <table>
+            <tr>
+                <th>Campo</th>
+                <th>Tipo</th>
+                <th>Descrizione</th>
+            </tr>
+            <tr>
+                <td>ID_A</td>
+                <td>INT (PK)</td>
+                <td>Identificativo univoco dell'allarme</td>
+            </tr>
+            <tr>
+                <td>Tipo</td>
+                <td>VARCHAR(50)</td>
+                <td>Tipologia (es. "PC Offline")</td>
+            </tr>
+            <tr>
+                <td>Risolto</td>
+                <td>BOOLEAN</td>
+                <td>Stato di risoluzione (0/1)</td>
+            </tr>
+            <tr>
+                <td>Data_Allarme</td>
+                <td>DATETIME</td>
+                <td>Data e ora di generazione</td>
+            </tr>
+            <tr>
+                <td>Data_Ris</td>
+                <td>DATETIME</td>
+                <td>Data e ora di risoluzione</td>
+            </tr>
+            <tr>
+                <td>ID_D</td>
+                <td>INT (FK)</td>
+                <td>Chiave esterna al dispositivo</td>
+            </tr>
+        </table>
+    </section>
+
+    <section id="funzionalita">
+        <h2>Funzionalità Principali</h2>
+        
+        <h3>Monitoraggio Automatico</h3>
+        <p>Il sistema include potenti funzioni di automazione implementate tramite procedure SQL:</p>
+        
+        <h4>Procedura CambiaStatoPC</h4>
+        <p>Simula guasti casuali modificando lo stato dei dispositivi:</p>
+        <div class="code-block">
+            CREATE PROCEDURE CambiaStatoPC()
+            BEGIN
+                DECLARE done INT DEFAULT 0;
+                DECLARE pc_id INT;
+                DECLARE pc_stato VARCHAR(10);
+                DECLARE cur CURSOR FOR SELECT ID_D, Stato FROM Dispositivi WHERE Tipo_Dispositivo = 'PC';
+                DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+                
+                OPEN cur;
+                pc_loop: LOOP
+                    FETCH cur INTO pc_id, pc_stato;
+                    IF done THEN LEAVE pc_loop; END IF;
+                    
+                    IF RAND() < 0.5 THEN
+                        IF pc_stato = 'Online' THEN
+                            UPDATE Dispositivi SET Stato = 'Offline' WHERE ID_D = pc_id;
+                            INSERT INTO Allarmi (Tipo, Risolto, Data_Allarme, Data_Ris, ID_D)
+                            VALUES ('PC Offline', FALSE, NOW(), NULL, pc_id);
+                        ELSE
+                            UPDATE Dispositivi SET Stato = 'Online' WHERE ID_D = pc_id;
+                            UPDATE Allarmi
+                            SET Risolto = TRUE, Data_Ris = NOW()
+                            WHERE ID_D = pc_id AND Tipo = 'PC Offline' AND Risolto = FALSE;
+                        END IF;
+                    END IF;
+                END LOOP;
+                CLOSE cur;
+            END;
+        </div>
+
+        <h4>Procedura PuliziaAllarmiRisolti</h4>
+        <p>Mantiene il database ottimizzato eliminando gli allarmi risolti:</p>
+        <div class="code-block">
+            CREATE PROCEDURE PuliziaAllarmiRisolti()
+            BEGIN
+                DELETE FROM Allarmi
+                WHERE Risolto = TRUE
+                AND Data_Ris < NOW() - INTERVAL 1 DAY;
+                
+                SELECT CONCAT('Eliminati ', ROW_COUNT(), ' allarmi risolti') AS Risultato;
+            END;
+        </div>
+
+        <h3>Gestione Allarmi</h3>
+        <p>Il sistema offre un sofisticato meccanismo di gestione allarmi:</p>
+        <ul>
+            <li><strong>Generazione automatica</strong> quando viene rilevato un dispositivo offline</li>
+            <li><strong>Storico completo</strong> con data di creazione e risoluzione</li>
+            <li><strong>Interfaccia di gestione</strong> per gli amministratori</li>
+            <li><strong>Notifiche in tempo reale</strong> per gli allarmi critici</li>
+        </ul>
+
+        <h3>Tracciamento Utenti e Dispositivi</h3>
+        <p>Funzionalità avanzate per la gestione degli accessi:</p>
+        <ul>
+            <li>Assegnazione di dispositivi a utenti specifici</li>
+            <li>Registrazione dettagliata delle sessioni (login/logout)</li>
+            <li>Controllo degli accessi basato sui ruoli</li>
+            <li>Reportistica sulle attività degli utenti</li>
+        </ul>
+    </section>
+
+    <section id="rete">
+        <h2>Rete Simulata in Packet Tracer</h2>
+        <p>Per testare il sistema è stata progettata una rete simulata in Cisco Packet Tracer:</p>
+        
+        <div class="image-container">
+            <img src="foto1.png" alt="Diagramma della rete simulata">
+            <p>Architettura della rete simulata</p>
+        </div>
+
+        <h3>Dispositivi principali</h3>
+        <ul>
+            <li><strong>3 Switch</strong> (uno per ogni reparto: progettazione, produzione, amministrazione)</li>
+            <li><strong>9 PC</strong> (3 per ogni reparto)</li>
+            <li><strong>3 Access Point</strong> per la connessione wireless</li>
+            <li><strong>3 Smartphone</strong> (uno per reparto)</li>
+            <li><strong>1 Router</strong> centrale con connessione Internet</li>
+            <li><strong>1 Server</strong> per il sistema gestionerete</li>
+        </ul>
+
+        <h3>Integrazione con il sistema</h3>
+        <p>Tutti i dispositivi della rete simulata sono mappati nel database:</p>
+        <ul>
+            <li>Ogni dispositivo è registrato con il suo tipo specifico</li>
+            <li>Lo stato viene aggiornato in base alla connettività</li>
+            <li>Gli utenti sono associati ai dispositivi che utilizzano</li>
+        </ul>
+    </section>
+
+    <section id="bayes">
+        <h2>Applicazione del Teorema di Bayes</h2>
+        <p>Il teorema di Bayes è stato applicato per ottimizzare la gestione degli allarmi:</p>
+        
+        <div class="math">
+            P(A|B) = [P(B|A) × P(A)] / P(B)
+        </div>
+
+        <h3>Contesto applicativo</h3>
+        <p>Determinare la probabilità che un dispositivo sia realmente guasto quando viene generato un allarme:</p>
+
+        <h4>Dati disponibili</h4>
+        <ul>
+            <li><strong>P(G)</strong> = Probabilità a priori di guasto = 5% (0.05)</li>
+            <li><strong>P(A|G)</strong> = Probabilità di allarme dato il guasto = 90% (0.9)</li>
+            <li><strong>P(A|¬G)</strong> = Probabilità di falso allarme = 10% (0.1)</li>
+        </ul>
+
+        <h4>Calcoli</h4>
+        <p>1. Probabilità totale di un allarme:</p>
+        <div class="math">
+            P(A) = P(A|G)·P(G) + P(A|¬G)·P(¬G) = 0.9·0.05 + 0.1·0.95 = 0.14
+        </div>
+
+        <p>2. Probabilità a posteriori di guasto dato l'allarme:</p>
+        <div class="math">
+            P(G|A) = [P(A|G) × P(G)] / P(A) = (0.9 × 0.05) / 0.14 ≈ 0.321 (32.1%)
+        </div>
+
+        <h3>Interpretazione</h3>
+        <p>Solo il <strong>32.1%</strong> degli allarmi "PC Offline" indica un effettivo guasto. Questo risultato ha portato a:</p>
+        <ul>
+            <li>Migliorare il sistema di rilevamento per ridurre i falsi positivi</li>
+            <li>Implementare verifiche aggiuntive prima di segnalare gli allarmi</li>
+            <li>Classificare gli allarmi in base alla loro affidabilità</li>
+        </ul>
+    </section>
+
+    <section id="vpn">
+        <h2>Sicurezza con VPN</h2>
+        <p>Il sistema integra i principi delle VPN (Virtual Private Network) per garantire sicurezza e privacy:</p>
+        
+        <h3>Tipologie di VPN</h3>
+        <table>
+            <tr>
+                <th>Tipo</th>
+                <th>Descrizione</th>
+                <th>Applicazione</th>
+            </tr>
+            <tr>
+                <td>Accesso remoto</td>
+                <td>Permette a utenti remoti di accedere alla rete aziendale</td>
+                <td>Lavoro da casa, mobility</td>
+            </tr>
+            <tr>
+                <td>Site-to-site (Intranet)</td>
+                <td>Collega sedi diverse della stessa azienda</td>
+                <td>Filiali, uffici distaccati</td>
+            </tr>
+            <tr>
+                <td>Site-to-site (Extranet)</td>
+                <td>Collega l'azienda con partner e fornitori</td>
+                <td>Collaborazioni esterne</td>
+            </tr>
+            <tr>
+                <td>Trusted VPN</td>
+                <td>Utilizza MPLS per circuiti virtuali</td>
+                <td>Reti complesse con QoS</td>
+            </tr>
+            <tr>
+                <td>Secure VPN</td>
+                <td>Focus sulla sicurezza dei dati</td>
+                <td>Comunicazioni sensibili</td>
+            </tr>
+        </table>
+
+        <h3>Protocolli di sicurezza</h3>
+        <p>Principali tecnologie implementate:</p>
+        <ul>
+            <li><strong>IPSec</strong>:
+                <ul>
+                    <li>AH (Authentication Header) - autenticazione e integrità</li>
+                    <li>ESP (Encapsulating Security Payload) - cifratura</li>
+                    <li>IKE (Internet Key Exchange) - scambio chiavi</li>
+                </ul>
+            </li>
+            <li><strong>SSL/TLS</strong> - per connessioni sicure via web</li>
+            <li><strong>OpenVPN</strong> - soluzione open-source versatile</li>
+        </ul>
+
+        <h3>Collegamento con il progetto</h3>
+        <p>Il sistema gestionerete può essere esteso con:</p>
+        <ul>
+            <li>Accesso VPN per amministratori remoti</li>
+            <li>Monitoraggio delle connessioni VPN</li>
+            <li>Integrazione con sistemi di autenticazione a più fattori</li>
+            <li>Tracciamento delle sessioni VPN</li>
+        </ul>
+    </section>
+
+    <section id="pirandello">
+        <h2>Collegamento con Luigi Pirandello</h2>
+        <p>Il tema dell'identità digitale nel sistema gestionerete trova un interessante parallelo con le opere di Luigi Pirandello:</p>
+
+        <h3>Il concetto di maschera</h3>
+        <p>Pirandello sosteneva che:</p>
+        <ul>
+            <li>Ogni individuo indossa diverse "maschere" sociali</li>
+            <li>La nostra identità è frammentata in diverse versioni di noi stessi</li>
+            <li>Nessuno ci vede per come realmente siamo</li>
+            <li>Noi stessi abbiamo una percezione mutevole di chi siamo</li>
+        </ul>
+
+        <h3>Analogia con il sistema gestionerete</h3>
+        <p>Nel sistema:</p>
+        <ul>
+            <li>Gli utenti possono accedere da diversi dispositivi e luoghi</li>
+            <li>Ogni dispositivo rappresenta una diversa "identità digitale"</li>
+            <li>Il sistema deve riconoscere l'utente al di là del dispositivo utilizzato</li>
+            <li>Le credenziali rappresentano l'identità "reale" dietro le diverse "maschere" digitali</li>
+        </ul>
+
+        <h3>Opere di riferimento</h3>
+        <p><strong>"Uno, nessuno e centomila"</strong> (1926):</p>
+        <ul>
+            <li>Il protagonista scopre di essere percepito in modo diverso da ogni persona che lo conosce</li>
+            <li>Analogia con le diverse identità digitali che un utente può assumere</li>
+        </ul>
+
+        <p><strong>"Il treno ha fischiato"</strong> (1914):</p>
+        <ul>
+            <li>L'impiegato Belluca cerca di sfuggire alla routine e alle costrizioni sociali</li>
+            <li>Parallelo con la necessità di sicurezza ma anche di libertà nelle reti digitali</li>
+        </ul>
+    </section>
+
+    <section id="guerrafredda">
+        <h2>Contesto Storico: La Guerra Fredda</h2>
+        <p>L'evoluzione della sicurezza informatica affonda le radici nel periodo della Guerra Fredda:</p>
+
+        <h3>Eventi chiave</h3>
+        <ul>
+            <li><strong>1949</strong>: L'URSS sviluppa la bomba atomica</li>
+            <li><strong>1949</strong>: Nasce la NATO</li>
+            <li><strong>1955</strong>: Creazione del Patto di Varsavia</li>
+            <li><strong>1950-1953</strong>: Guerra di Corea</li>
+        </ul>
+
+        <h3>Sviluppi tecnologici</h3>
+        <p>La necessità di comunicazioni sicure portò a:</p>
+        <ul>
+            <li>Sistemi avanzati di crittografia</li>
+            <li>Reti resilienti agli attacchi</li>
+            <li><strong>ARPANET</strong> (1969) - precursore di Internet</li>
+            <li>Protocolli di sicurezza per le comunicazioni</li>
+        </ul>
+
+        <h3>Collegamento con le VPN moderne</h3>
+        <p>Le tecnologie sviluppate durante la Guerra Fredda hanno gettato le basi per:</p>
+        <ul>
+            <li>Reti private virtuali (VPN)</li>
+            <li>Sistemi di autenticazione sicura</li>
+            <li>Protocolli di cifratura</li>
+            <li>Architetture di rete resilienti</li>
+        </ul>
+    </section>
+
+    <section id="conclusioni">
+        <h2>Conclusioni</h2>
+        
+        <div class="conclusion">
+            <h3>Valore del progetto</h3>
+            <p>Il sistema "gestionerete" rappresenta una soluzione completa che unisce:</p>
+            <ul>
+                <li><strong>Tecnologia</strong>: Database, automazione, monitoraggio</li>
+                <li><strong>Matematica</strong>: Applicazione del teorema di Bayes</li>
+                <li><strong>Sicurezza</strong>: Principi delle VPN e protezione dati</li>
+                <li><strong>Etica</strong>: Rispetto della privacy e cittadinanza digitale</li>
+            </ul>
+        </div>
+
+        <h3>Punti di forza</h3>
+        <ul>
+            <li><strong>Centralizzazione</strong> del monitoraggio di rete</li>
+            <li><strong>Automazione</strong> dei processi di controllo</li>
+            <li><strong>Sicurezza</strong> integrata nelle comunicazioni</li>
+            <li><strong>Scalabilità</strong> per adattarsi a diverse dimensioni aziendali</li>
+            <li><strong>Interdisciplinarità</strong> nell'approccio progettuale</li>
+        </ul>
+
+        <h3>Sviluppi futuri</h3>
+        <p>Possibili evoluzioni del sistema:</p>
+        <ul>
+            <li>Integrazione con sistemi di intelligenza artificiale per l'analisi predittiva</li>
+            <li>Implementazione di VPN aziendali per l'accesso remoto sicuro</li>
+            <li>Estensione del monitoraggio a dispositivi IoT</li>
+            <li>Dashboard avanzate per la visualizzazione dei dati</li>
+        </ul>
+    </section>
+
+    <footer>
+        <p>Tesina di Esame di Stato - Anno Scolastico 2024/2025</p>
+        <p>Sistema di Gestione Rete Aziendale "gestionerete"</p>
+        <p>Studente: [Andrea Tortora] - Classe: [5ainf] - Istituto: [Della Corte Vanvitelli]</p>
+    </footer>
+</body>
+</html>

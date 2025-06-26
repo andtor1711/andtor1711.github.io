@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisi di rete.php - Gestionerete</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <style>
+        .code-header {
+            background-color: #343a40;
+            color: white;
+            padding: 8px 15px;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .full-code {
+            margin-bottom: 3rem;
+        }
+        .explanation-block {
+            background-color: #f8f9fa;
+            border-left: 4px solid #198754; /* Verde per differenziare dalla dashboard */
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0 5px 5px 0;
+        }
+        .nav-tabs .nav-link.active {
+            font-weight: bold;
+            border-bottom: 3px solid #198754;
+        }
+        .network-diagram {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .device-node {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px;
+            background-color: white;
+        }
+        .router-node {
+            border-left: 5px solid #0d6efd;
+        }
+        .server-node {
+            border-left: 5px solid #198754;
+        }
+        .pc-node {
+            border-left: 5px solid #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <div class="container">
+            <a class="navbar-brand" href="progetto.html">
+                <i class="bi bi-arrow-left me-2"></i>Gestionerete
+            </a>
+            <span class="navbar-text ms-auto">
+                Analisi del codice: rete.php
+            </span>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="sticky-top pt-3" style="top: 20px;">
+                    <div class="card">
+                        <div class="card-header bg-success text-white">
+                            Indice Analisi
+                        </div>
+                        <div class="card-body">
+                            <nav class="nav flex-column">
+                                <a class="nav-link" href="#overview">Panoramica</a>
+                                <a class="nav-link" href="#full-code">Codice Completo</a>
+                                <a class="nav-link" href="#data-fetch">Recupero Dati</a>
+                                <a class="nav-link" href="#classification">Classificazione</a>
+                                <a class="nav-link" href="#visualization">Visualizzazione</a>
+                                <a class="nav-link" href="#live-demo">Demo Live</a>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-9">
+                <section id="overview">
+                    <h2 class="mb-4"><i class="bi bi-diagram-3 me-2"></i>Panoramica di rete.php</h2>
+                    <p>Il file <code>rete.php</code> genera una visualizzazione organizzata per reparti dell'intera infrastruttura di rete, con:</p>
+                    <ul>
+                        <li>Classificazione automatica dei dispositivi in base alla loro funzionalità</li>
+                        <li>Statistiche riepilogative per ogni reparto</li>
+                        <li>Visualizzazione grafica dello stato della rete</li>
+                        <li>Dettaglio completo per ogni dispositivo</li>
+                    </ul>
+                    
+                    <div class="alert alert-success">
+                        <i class="bi bi-lightbulb me-2"></i>Questo file dimostra un approccio efficace per organizzare e presentare dati di rete complessi in modo intuitivo.
+                    </div>
+                </section>
+
+                <section id="full-code" class="mt-5">
+                    <h2 class="mb-4"><i class="bi bi-file-earmark-code me-2"></i>Codice Completo</h2>
+                    <p>Ecco il codice completo del file rete.php:</p>
+                    
+                    <div class="card mb-5">
+                        <div class="code-header bg-success">
+                            <span>rete.php</span>
+                            <button class="btn btn-sm btn-outline-light" onclick="copyCode('rete-code')">
+                                <i class="bi bi-clipboard"></i> Copia
+                            </button>
+                        </div>
+                        <pre><code class="php" id="rete-code"><?php
+// rete.php - Visualizzazione Rete per Reparti
+
+require_once 'config.php';
+$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
+// 1. Recupero tutti i dispositivi con info aggiuntive
+$query = "SELECT d.*, i.Funzionalita, i.Porta 
+          FROM dispositivi d
+          LEFT JOIN info i ON d.ID_D = i.ID_D
+          ORDER BY d.Tipo_Dispositivo";
+$result = $conn->query($query);
+
+// 2. Classificazione per reparto
+$reparti = [
+    'Infrastruttura' => [],
+    'Progettazione' => [],
+    'Produzione' => [],
+    'Amministrazione' => []
+];
+
+while ($device = $result->fetch_assoc()) {
+    $funzionalita = strtolower($device['Funzionalita'] ?? '');
+    
+    if (in_array($device['Tipo_Dispositivo'], ['Router', 'Server'])) {
+        $reparti['Infrastruttura'][] = $device;
+    } elseif (strpos($funzionalita, 'progettazione') !== false) {
+        $reparti['Progettazione'][] = $device;
+    } elseif (strpos($funzionalita, 'produzione') !== false) {
+        $reparti['Produzione'][] = $device;
+    } elseif (strpos($funzionalita, 'amministrazione') !== false) {
+        $reparti['Amministrazione'][] = $device;
+    }
+}
+
+// 3. Calcolo statistiche
+$stats = [];
+foreach ($reparti as $nome => $dispositivi) {
+    $stats[$nome] = [
+        'pc' => count(array_filter($dispositivi, fn($d) => $d['Tipo_Dispositivo'] === 'PC')),
+        'stampanti' => count(array_filter($dispositivi, fn($d) => $d['Tipo_Dispositivo'] === 'Stampante')),
+        'online' => count(array_filter($dispositivi, fn($d) => $d['Stato'] === 'Online'))
+    ];
+}
+
+// 4. Visualizzazione HTML
+?>
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <!-- Intestazione HTML -->
+</head>
+<body>
+    <!-- Corpo della pagina -->
+</body>
+</html>
+</code></pre>
+                    </div>
+                </section>
+
+                <section id="data-fetch" class="mt-5">
+                    <h2 class="mb-4"><i class="bi bi-database me-2"></i>Recupero e Organizzazione dei Dati</h2>
+                    <p>La prima parte del codice si occupa di recuperare i dati dal database e organizzarli in una struttura logica:</p>
+                    
+                    <div class="explanation-block">
+                        <h5><i class="bi bi-code-square me-2"></i>Codice Chiave</h5>
+                        <pre><code class="php">// Query per ottenere tutti i dispositivi con informazioni aggiuntive
+$query = "SELECT d.*, i.Funzionalita, i.Porta 
+          FROM dispositivi d
+          LEFT JOIN info i ON d.ID_D = i.ID_D
+          ORDER BY d.Tipo_Dispositivo";
+$result = $conn->query($query);
+
+// Struttura per classificare i dispositivi
+$reparti = [
+    'Infrastruttura' => [],
+    'Progettazione' => [],
+    'Produzione' => [],
+    'Amministrazione' => []
+];</code></pre>
+                        
+                        <h5 class="mt-3"><i class="bi bi-lightbulb me-2"></i>Spiegazione</h5>
+                        <ul>
+                            <li><strong>JOIN tra tabelle</strong>: Combina dati da <code>dispositivi</code> e <code>info</code> per avere un quadro completo</li>
+                            <li><strong>LEFT JOIN</strong>: Garantisce che tutti i dispositivi vengano mostrati anche se mancano info aggiuntive</li>
+                            <li><strong>Struttura $reparti</strong>: Array predefinito che assicura un ordine consistente nella visualizzazione</li>
+                            <li><strong>Ordinamento</strong>: I dispositivi sono ordinati per tipo per un processing più efficiente</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section id="classification" class="mt-5">
+                    <h2 class="mb-4"><i class="bi bi-tags me-2"></i>Classificazione dei Dispositivi</h2>
+                    <p>Il cuore della logica di rete.php è l'algoritmo che classifica ogni dispositivo nel reparto appropriato:</p>
+                    
+                    <div class="explanation-block">
+                        <h5><i class="bi bi-code-square me-2"></i>Algoritmo di Classificazione</h5>
+                        <pre><code class="php">while ($device = $result->fetch_assoc()) {
+    $funzionalita = strtolower($device['Funzionalita'] ?? '');
+    
+    if (in_array($device['Tipo_Dispositivo'], ['Router', 'Server'])) {
+        $reparti['Infrastruttura'][] = $device;
+    } elseif (strpos($funzionalita, 'progettazione') !== false) {
+        $reparti['Progettazione'][] = $device;
+    } elseif (strpos($funzionalita, 'produzione') !== false) {
+        $reparti['Produzione'][] = $device;
+    } elseif (strpos($funzionalita, 'amministrazione') !== false) {
+        $reparti['Amministrazione'][] = $device;
+    }
+}</code></pre>
+                        
+                        <h5 class="mt-3"><i class="bi bi-lightbulb me-2"></i>Logica di Classificazione</h5>
+                        <ol>
+                            <li><strong>Dispositivi infrastrutturali</strong>: Router e Server vanno in una categoria speciale</li>
+                            <li><strong>Analisi del campo Funzionalita</strong>: Cerca parole chiave come "progettazione", "produzione", etc.</li>
+                            <li><strong>Case insensitive</strong>: Convertito in minuscolo per uniformità</li>
+                            <li><strong>Ordine dei controlli</strong>: Prima l'infrastruttura, poi i reparti specifici</li>
+                        </ol>
+                        
+                        <div class="mt-3 p-3 bg-light border rounded">
+                            <h6><i class="bi bi-diagram-3 me-2"></i>Esempio di Classificazione</h6>
+                            <p>Un dispositivo con <code>Funzionalita = "PC progettazione1"</code> verrà classificato nel reparto <strong>Progettazione</strong>.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="visualization" class="mt-5">
+                    <h2 class="mb-4"><i class="bi bi-eye me-2"></i>Visualizzazione della Rete</h2>
+                    <p>La parte finale del codice genera l'output HTML organizzato per reparti:</p>
+                    
+                    <div class="explanation-block">
+                        <h5><i class="bi bi-code-square me-2"></i>Generazione HTML</h5>
+                        <pre><code class="php">// Per ogni reparto
+foreach ($reparti as $nome => $dispositivi) {
+    echo "&lt;div class='reparto-section'&gt;";
+    echo "&lt;h3&gt;$nome&lt;/h3&gt;";
+    
+    // Statistiche reparto
+    echo "&lt;div class='stats'&gt;";
+    echo "PC: {$stats[$nome]['pc']}, Stampanti: {$stats[$nome]['stampanti']}, Online: {$stats[$nome]['online']}";
+    echo "&lt;/div&gt;";
+    
+    // Dispositivi
+    foreach ($dispositivi as $device) {
+        echo "&lt;div class='device-card {$device['Stato']}'&gt;";
+        echo "&lt;h4&gt;{$device['Funzionalita']}&lt;/h4&gt;";
+        echo "&lt;p&gt;IP: {$device['Indirizzo_IP']}&lt;/p&gt;";
+        echo "&lt;p&gt;Stato: {$device['Stato']}&lt;/p&gt;";
+        echo "&lt;/div&gt;";
+    }
+    
+    echo "&lt;/div&gt;";
+}</code></pre>
+                        
+                        <h5 class="mt-3"><i class="bi bi-lightbulb me-2"></i>Struttura della Visualizzazione</h5>
+                        <ul>
+                            <li><strong>Sezioni per reparto</strong>: Ogni reparto ha una sezione dedicata</li>
+                            <li><strong>Statistiche in evidenza</strong>: Mostra conteggio PC, stampanti e dispositivi online</li>
+                            <li><strong>Card dispositivo</li>: Ogni dispositivo è rappresentato da una card con informazioni essenziali</li>
+                            <li><strong>Stato visivo</li>: Le card hanno stili diversi per dispositivi online/offline</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Nuova Sezione: Collegamento alla Visualizzazione Rete -->
+                <section id="live-demo" class="mt-5">
+                    <h2 class="mb-4"><i class="bi bi-play-circle me-2"></i>Collegamento alla Visualizzazione Rete</h2>
+                    
+                    <div class="alert alert-success">
+                        <i class="bi bi-check-circle me-2"></i>Puoi accedere alla visualizzazione della rete funzionante tramite il seguente link:
+                        <a href="http://localhost/gestione_rete/rete.php" class="alert-link" target="_blank">http://localhost/gestione_rete/rete.php</a>
+                    </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+            <p class="mb-0">Sistema di Gestione Rete Aziendale &copy; 2025</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>
+        // Attiva syntax highlighting
+        hljs.highlightAll();
+        
+        // Funzione per copiare il codice
+        function copyCode(id) {
+            const code = document.getElementById(id);
+            navigator.clipboard.writeText(code.textContent)
+                .then(() => alert('Codice copiato!'));
+        }
+    </script>
+</body>
+</html>

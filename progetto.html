@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>gestionerete - Sistema di Gestione Rete Aziendale</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #3498db;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            padding-top: 80px;
+        }
+        
+        .navbar {
+            background-color: var(--primary-color) !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 5rem 0;
+            margin-bottom: 3rem;
+        }
+        
+        .feature-card {
+            border: none;
+            border-radius: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            height: 100%;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+        
+        .device-card {
+            border-left: 5px solid;
+            transition: all 0.3s;
+        }
+        
+        .device-card.online {
+            border-left-color: var(--success-color);
+        }
+        
+        .device-card.offline {
+            border-left-color: var(--danger-color);
+        }
+        
+        .network-diagram {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .router-node {
+            border-left: 5px solid var(--accent-color);
+        }
+        
+        .server-node {
+            border-left: 5px solid var(--success-color);
+        }
+        
+        .section-title {
+            position: relative;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background-color: var(--accent-color);
+        }
+        
+        .tech-logo {
+            height: 60px;
+            margin-bottom: 15px;
+        }
+        
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        
+        .status-badge.online {
+            background-color: var(--success-color);
+        }
+        
+        .status-badge.offline {
+            background-color: var(--danger-color);
+        }
+        .network-image-container {
+    max-width: 100%;
+    overflow: hidden;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+    box-shadow: var(--shadow);
+}
+
+.network-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    border: 1px solid rgba(108, 92, 231, 0.2);
+    transition: var(--transition);
+}
+
+/* Per mantenere il responsive su mobile */
+@media (max-width: 768px) {
+    .network-image-container {
+        margin: 1rem 0;
+    }
+}
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-diagram-3 me-2"></i>gestionerete
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#intro">Introduzione</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#database">Database</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#features">Funzionalità</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#network">Rete</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#interface">Interfaccia</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#code">Codice</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-section">
+        <div class="container text-center">
+            <h1 class="display-4 fw-bold mb-4">Sistema di Gestione Rete Aziendale</h1>
+            <p class="lead mb-5">Monitoraggio centralizzato, allarmi automatici e gestione semplificata della tua infrastruttura di rete</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Introduzione -->
+<section id="intro" class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center">
+                <span class="badge bg-primary mb-3">SOLUZIONE INNOVATIVA</span>
+                <h2 class="display-4 fw-bold mb-4">Rivoluziona la gestione della tua rete aziendale</h2>
+                <p class="lead fs-3 mb-5">"<strong>gestionerete</strong>" è la piattaforma intelligente che trasforma il monitoraggio di rete da attività complessa a processo semplice ed efficiente.</p>
+                
+                <div class="row g-4 mb-5">
+                    <div class="col-md-4">
+                        <div class="p-4 rounded-3 bg-light h-100">
+                            <div class="bg-primary bg-opacity-10 p-3 rounded-circle d-inline-block mb-3">
+                                <i class="bi bi-shield-check text-primary fs-2"></i>
+                            </div>
+                            <h4 class="mb-3">Monitoraggio in tempo reale</h4>
+                            <p class="text-muted">Tieni sotto controllo ogni dispositivo con aggiornamenti immediati e continui</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-4 rounded-3 bg-light h-100">
+                            <div class="bg-primary bg-opacity-10 p-3 rounded-circle d-inline-block mb-3">
+                                <i class="bi bi-activity text-primary fs-2"></i>
+                            </div>
+                            <h4 class="mb-3">Allarmi Automatici</h4>
+                            <p class="text-muted">Visualizzi subito gli allarmi quando un pc risulta offline</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-4 rounded-3 bg-light h-100">
+                            <div class="bg-primary bg-opacity-10 p-3 rounded-circle d-inline-block mb-3">
+                                <i class="bi bi-graph-up-arrow text-primary fs-2"></i>
+                            </div>
+                            <h4 class="mb-3">Grafici avanzati</h4>
+                            <p class="text-muted">in modo da visualizzare le informazioni in modo diretto</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-grid gap-3 d-sm-flex justify-content-sm-center mb-5">
+                    <a href="#features" class="btn btn-primary btn-lg px-4 me-sm-3">Scopri le funzionalità</a>
+                    <a href="#interface" class="btn btn-outline-primary btn-lg px-4">Vedi l'interfaccia</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+        <!-- Database Structure -->
+        <section id="database" class="py-5 bg-light">
+            <div class="container">
+                <h2 class="section-title text-center mb-5">Struttura del Database</h2>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <img src="foto2.png" alt="Schema del database" class="img-fluid mb-3">
+                                <h4 class="card-title">Schema Entità-Relazione</h4>
+                                <p class="card-text">Il database è composto da 4 tabelle principali che gestiscono dispositivi, utenti, informazioni tecniche e allarmi.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h4 class="card-title mb-4">Tabelle Principali</h4>
+                                <div class="accordion" id="dbAccordion">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                                                <strong>Tabella Dispositivi</strong>
+                                            </button>
+                                        </h2>
+                                        <div id="collapseOne" class="accordion-collapse collapse show">
+                                            <div class="accordion-body">
+                                                <ul>
+                                                    <li><strong>ID_D</strong>: Chiave primaria</li>
+                                                    <li><strong>Indirizzo_IP</strong>: Indirizzo IP del dispositivo</li>
+                                                    <li><strong>Indirizzo_MAC</strong>: Indirizzo MAC</li>
+                                                    <li><strong>Tipo_Dispositivo</strong>: PC, Stampante, Router, Server</li>
+                                                    <li><strong>Stato</strong>: Online/Offline</li>
+                                                    <li><strong>ID_US</strong>: Chiave esterna all'utente</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                                                <strong>Tabella User</strong>
+                                            </button>
+                                        </h2>
+                                        <div id="collapseTwo" class="accordion-collapse collapse">
+                                            <div class="accordion-body">
+                                                <ul>
+                                                    <li><strong>ID_US</strong>: Chiave primaria</li>
+                                                    <li><strong>Username</strong>: Nome utente</li>
+                                                    <li><strong>Email</strong>: Email dell'utente</li>
+                                                    <li><strong>Ruolo</strong>: amministratore/operatore</li>
+                                                    <li><strong>Data, Login, Logout</strong>: Tracciamento sessioni</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                                                <strong>Tabella Info</strong>
+                                            </button>
+                                        </h2>
+                                        <div id="collapseThree" class="accordion-collapse collapse">
+                                            <div class="accordion-body">
+                                                <ul>
+                                                    <li><strong>ID_I</strong>: Chiave primaria</li>
+                                                    <li><strong>Porta</strong>: Porta di connessione</li>
+                                                    <li><strong>Protocollo</strong>: Protocollo utilizzato</li>
+                                                    <li><strong>Funzionalità</strong>: Descrizione funzionalità</li>
+                                                    <li><strong>ID_D</strong>: Chiave esterna al dispositivo</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour">
+                                                <strong>Tabella Allarmi</strong>
+                                            </button>
+                                        </h2>
+                                        <div id="collapseFour" class="accordion-collapse collapse">
+                                            <div class="accordion-body">
+                                                <ul>
+                                                    <li><strong>ID_A</strong>: Chiave primaria</li>
+                                                    <li><strong>Tipo</strong>: Tipo di allarme (es. "PC Offline")</li>
+                                                    <li><strong>Risolto</strong>: 0/1</li>
+                                                    <li><strong>Data_Allarme, Data_Ris</strong>: Date rilevanti</li>
+                                                    <li><strong>ID_D</strong>: Chiave esterna al dispositivo</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section id="features" class="py-5">
+            <div class="container">
+                <h2 class="section-title text-center mb-5">Funzionalità Principali</h2>
+                <div class="row g-4">
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card feature-card text-center h-100">
+                            <div class="card-body">
+                                <div class="feature-icon">
+                                    <i class="bi bi-pc-display"></i>
+                                </div>
+                                <h5>Monitoraggio Dispositivi</h5>
+                                <p>Visualizza in tempo reale lo stato di tutti i dispositivi di rete (Online/Offline).</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card feature-card text-center h-100">
+                            <div class="card-body">
+                                <div class="feature-icon">
+                                    <i class="bi bi-bell-fill"></i>
+                                </div>
+                                <h5>Gestione Allarmi</h5>
+                                <p>Ricevi notifiche immediate quando un dispositivo smette di rispondere.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card feature-card text-center h-100">
+                            <div class="card-body">
+                                <div class="feature-icon">
+                                    <i class="bi bi-people-fill"></i>
+                                </div>
+                                <h5>Tracciamento Utenti</h5>
+                                <p>Associa dispositivi a utenti specifici per una migliore accountability.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card feature-card text-center h-100">
+                            <div class="card-body">
+                                <div class="feature-icon">
+                                    <i class="bi bi-robot"></i>
+                                </div>
+                                <h5>Automazione</h5>
+                                <p>Procedure automatiche per il monitoraggio e la manutenzione della rete.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-5">
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header bg-primary text-white">
+                                <i class="bi bi-robot me-2"></i>Procedura CambiaStatoPC
+                            </div>
+                            <div class="card-body">
+                                <p>Simula guasti casuali ai PC per testare il sistema di monitoraggio:</p>
+                                <ul>
+                                    <li>Cambia casualmente lo stato dei PC (50% di probabilità)</li>
+                                    <li>Genera allarmi quando un PC va offline</li>
+                                    <li>Risolve automaticamente gli allarmi quando il PC torna online</li>
+                                </ul>
+                                <pre class="bg-light p-3 rounded"><code>CREATE PROCEDURE `CambiaStatoPC`()
+BEGIN
+    -- Dichiarazione variabili
+    DECLARE done INT DEFAULT 0;
+    DECLARE pc_id INT;
+    DECLARE pc_stato VARCHAR(10);
+    DECLARE cur CURSOR FOR SELECT ID_D, Stato FROM Dispositivi WHERE Tipo_Dispositivo = 'PC';
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+    
+    -- Apertura cursore
+    OPEN cur;
+    
+    -- Ciclo attraverso tutti i PC
+    pc_loop: LOOP
+        FETCH cur INTO pc_id, pc_stato;
+        IF done THEN
+            LEAVE pc_loop;
+        END IF;
+        
+        -- Cambia stato casualmente (50% di probabilità)
+        IF RAND() < 0.5 THEN
+            IF pc_stato = 'Online' THEN
+                UPDATE Dispositivi SET Stato = 'Offline' WHERE ID_D = pc_id;
+                
+                -- Registra allarme se il PC va offline
+                INSERT INTO Allarmi (Tipo, Risolto, Data_Allarme, Data_Ris, ID_D)
+                VALUES ('PC Offline', FALSE, NOW(), NULL, pc_id);
+            ELSE
+                UPDATE Dispositivi SET Stato = 'Online' WHERE ID_D = pc_id;
+                
+                -- Aggiorna allarme se esiste e non è risolto
+                UPDATE Allarmi 
+                SET Risolto = TRUE, Data_Ris = NOW() 
+                WHERE ID_D = pc_id AND Tipo = 'PC Offline' AND Risolto = FALSE;
+            END IF;
+        END IF;
+    END LOOP;
+    
+    -- Chiusura cursore
+    CLOSE cur;
+END</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header bg-success text-white">
+                                <i class="bi bi-trash3 me-2"></i>Procedura PuliziaAllarmiRisolti
+                            </div>
+                            <div class="card-body">
+                                <p>Mantiene il database pulito eliminando gli allarmi risolti:</p>
+                                <ul>
+                                    <li>Elimina gli allarmi risolti da più di 1 giorno</li>
+                                    <li>Mostra il numero di allarmi eliminati</li>
+                                    <li>Ottimizza le prestazioni del sistema</li>
+                                </ul>
+                                <pre class="bg-light p-3 rounded"><code>CREATE PROCEDURE `PuliziaAllarmiRisolti`()
+BEGIN
+    -- Elimina tutti gli allarmi risolti da più di 1 giorno
+    DELETE FROM Allarmi 
+    WHERE Risolto = TRUE 
+    AND Data_Ris < NOW() - INTERVAL 1 DAY;
+    
+    -- Mostra il numero di allarmi eliminati
+    SELECT CONCAT('Eliminati ', ROW_COUNT(), ' allarmi risolti da più di 1 giorno') AS Risultato;
+END</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Network -->
+        <section id="network" class="py-5 bg-light">
+            <div class="container">
+                <h2 class="section-title text-center mb-5">Rete Aziendale</h2>
+                <img src="foto1.png" alt="Descrizione rete" class="network-image">
+                <div class="row align-items-center mb-5">
+                    <div class="col-lg-6">
+
+<br>
+<br>
+                        <h3>Topologia della Rete</h3>
+                        <p>La rete simulata in Packet Tracer rappresenta una tipica piccola azienda con diversi reparti:</p>
+                        <ul>
+                            <li>Router centrale: 192.168.10.10</li>
+                            <li>Server aziendale: 192.168.10.100</li>
+                            <li>PC e stampanti suddivisi per reparto</li>
+                            <li>Access point per dispositivi mobili</li>
+                        </ul>
+                        <p>Tutti i dispositivi sono monitorabili attraverso il sistema "gestionerete".</p>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <img src="ChatGPT Image 25 giu 2025, 19_17_41.png" alt="Tabella indirizzi IP" class="img-fluid rounded">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </section>
+
+       <!-- Interface -->
+<section id="interface" class="py-5">
+    <div class="container">
+        <h2 class="section-title text-center mb-5">Interfaccia Web</h2>
+        
+        <!-- Parte 1: Gestione e Risoluzione Allarmi -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <h3 class="mb-4 text-center">Gestione dispositivi e Risoluzione Allarmi</h3>
+                <div class="row g-4">
+                    <!-- Dashboard Allarmi -->
+                    <div class="col-lg-6">
+                        <div class="card h-100">
+                            <div class="card-header bg-primary text-white d-flex align-items-center">
+                                <i class="bi bi-speedometer2 me-2"></i>
+                                <span>Dashboard Allarmi</span>
+                            </div>
+                            <div class="card-body p-0">
+                                <img src="Screenshot 2025-06-26 115428.png" alt="Dashboard allarmi" class="img-fluid rounded-bottom">
+                            </div>
+                            <div class="card-footer bg-light">
+                                <small>Panoramica completa dello stato della rete e degli allarmi attivi</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Lista Allarmi Attivi -->
+                    <div class="col-lg-6">
+                        <div class="card h-100">
+                            <div class="card-header bg-danger text-white d-flex align-items-center">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                <span>Lista Allarmi Attivi</span>
+                            </div>
+                            <div class="card-body p-0">
+                                <img src="Screenshot 2025-06-26 115448.png" alt="Lista allarmi" class="img-fluid rounded-bottom">
+                            </div>
+                            <div class="card-footer bg-light">
+                                <small>Dettaglio degli allarmi con possibilità di filtro e risoluzione</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Gestione Dispositivi - Full width -->
+                    <div class="col-12 mt-4">
+                        <div class="card">
+                            <div class="card-header bg-dark text-white d-flex align-items-center">
+                                <i class="bi bi-pc-display-horizontal me-2"></i>
+                                <span>Gestione Dispositivi</span>
+                            </div>
+                            <div class="card-body p-0">
+                                <img src="Screenshot 2025-06-26 115439.png" alt="Gestione dispositivi" class="img-fluid rounded-bottom">
+                            </div>
+                            <div class="card-footer bg-light">
+                                <small>Tabella completa di tutti i dispositivi di rete con filtri e azioni</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Parte 2: Informazioni della Rete (resta invariata) -->
+        <div class="row">
+            <div class="col-12">
+                <h3 class="mb-4 text-center">Informazioni della Rete</h3>
+                <div class="row g-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header bg-primary text-white">
+                                Infrastruttura di Rete
+                            </div>
+                            <div class="card-body">
+                                <img src="web.png" alt="Infrastruttura di rete" class="img-fluid rounded">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-success text-white">
+                                Reparto Progettazione
+                            </div>
+                            <div class="card-body">
+                                <img src="web1.png" alt="Reparto progettazione" class="img-fluid rounded">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-info text-white">
+                                Reparto produzione
+                            </div>
+                            <div class="card-body">
+                                <img src="web2.png" alt="Reparto amministrazione" class="img-fluid rounded">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header bg-secondary text-white">
+                                Reparto amministrazione
+                            </div>
+                            <div class="card-body">
+                                <img src="web3.png" alt="Riepilogo dispositivi" class="img-fluid rounded">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+        <!-- Code -->
+        <section id="code" class="py-5 bg-light">
+            <div class="container">
+                <h2 class="section-title text-center mb-5">Analisi del Codice</h2>
+                <p class="text-center mb-5">Esplora nel dettaglio il funzionamento interno dei componenti principali del sistema</p>
+                
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <i class="bi bi-file-code-fill display-4 text-primary mb-3"></i>
+                                <h4>dashboard.php</h4>
+                                <p>Dashboard di amministrazione con gestione dispositivi e allarmi</p>
+                                <a href="dashboard_explanation.html" class="btn btn-primary mt-3 stretched-link">Vedi Analisi</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <i class="bi bi-file-earmark-bar-graph-fill display-4 text-success mb-3"></i>
+                                <h4>rete.php</h4>
+                                <p>Visualizzazione della rete organizzata per reparti</p>
+                                <a href="rete_explanation.html" class="btn btn-success mt-3 stretched-link">Vedi Analisi</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Conclusioni -->
+        <section class="py-5">
+            <div class="container text-center">
+                <h2 class="section-title mb-4">Vantaggi del Sistema</h2>
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body">
+                                <i class="bi bi-eye-fill display-4 text-primary mb-3"></i>
+                                <h4>Monitoraggio Centralizzato</h4>
+                                <p>Un unico punto di controllo per l'intera infrastruttura di rete</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body">
+                                <i class="bi bi-bell-fill display-4 text-primary mb-3"></i>
+                                <h4>Allarmi Automatici</h4>
+                                <p>Notifiche immediate per dispositivi non rispondenti</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body">
+                                <i class="bi bi-arrows-angle-expand display-4 text-primary mb-3"></i>
+                                <h4>Scalabilità</h4>
+                                <p>Facile aggiunta di nuovi dispositivi e funzionalità</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    
+
+    <!-- Footer -->
+    <footer class="py-4 bg-dark text-white">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5><i class="bi bi-diagram-3 me-2"></i>gestionerete</h5>
+                    <p>Sistema di Gestione Rete Aziendale</p>
+                </div>
+                <div class="col-md-3">
+                    <h5>Link</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#intro" class="text-white">Introduzione</a></li>
+                        <li><a href="#database" class="text-white">Database</a></li>
+                        <li><a href="#code" class="text-white">Codice</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Tecnologie</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-database me-2"></i>MySQL</li>
+                        <li><i class="bi bi-filetype-php me-2"></i>PHP</li>
+                        <li><i class="bi bi-filetype-sql me-2"></i>SQL Procedures</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center">
+                <p class="mb-0">&copy; 2025 Sistema Gestionerete. Tutti i diritti riservati.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Abilita i tooltip
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
+    </script>
+</body>
+</html>

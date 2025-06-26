@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisi di dashboard.php - Gestionerete</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <style>
+        .code-header {
+            background-color: #343a40;
+            color: white;
+            padding: 8px 15px;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .full-code {
+            margin-bottom: 3rem;
+        }
+        .explanation-block {
+            background-color: #f8f9fa;
+            border-left: 4px solid #0d6efd;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0 5px 5px 0;
+        }
+        .nav-tabs .nav-link.active {
+            font-weight: bold;
+            border-bottom: 3px solid #0d6efd;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="progetto.html">
+                <i class="bi bi-arrow-left me-2"></i>Gestionerete
+            </a>
+            <span class="navbar-text ms-auto">
+                Analisi del codice: dashboard.php
+            </span>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="sticky-top pt-3" style="top: 20px;">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            Indice Analisi
+                        </div>
+                        <div class="card-body">
+                            <nav class="nav flex-column">
+                                <a class="nav-link" href="#overview">Panoramica</a>
+                                <a class="nav-link" href="#full-code">Codice Completo</a>
+                                <a class="nav-link" href="#auth">Autenticazione</a>
+                                <a class="nav-link" href="#crud">Operazioni CRUD</a>
+                                <a class="nav-link" href="#alarms">Gestione Allarmi</a>
+                                <a class="nav-link" href="#charts">Grafici</a>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-9">
+                <section id="overview">
+                    <h2 class="mb-4"><i class="bi bi-file-earmark-text me-2"></i>Panoramica di dashboard.php</h2>
+                    <p>Il file <code>dashboard.php</code> è il cuore del sistema di gestione, responsabile di:</p>
+                    <ul>
+                        <li>Autenticazione degli utenti e controllo degli accessi</li>
+                        <li>Gestione delle operazioni CRUD sui dispositivi</li>
+                        <li>Visualizzazione e risoluzione degli allarmi</li>
+                        <li>Generazione di grafici e statistiche</li>
+                        <li>Interfaccia utente amministrativa</li>
+                    </ul>
+                    
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>Questo file combina logica backend (PHP) e frontend (HTML/JS) seguendo il pattern MVC semplificato.
+                    </div>
+                </section>
+
+                <section id="full-code" class="mt-5">
+                    <h2 class="mb-4"><i class="bi bi-file-code me-2"></i>Codice Completo</h2>
+                    <p>Ecco il codice completo del file dashboard.php:</p>
+                    
+                    <div class="card full-code">
+                        <div class="code-header">
+                            <span>dashboard.php</span>
+                            <button class="btn btn-sm btn-outline-light" onclick="copyCode('full-code-block')">
+                                <i class="bi bi-clipboard"></i> Copia
+                            </button>
+                        </div>
+                        <pre><code class="php" id="full-code-block"><?php
+// dashboard.php - Sistema di Gestione Rete Aziendale
+
+// 1. Autenticazione e Configurazione
+session_start();
+require_once 'config.php';
+
+if (!isset($_SESSION['user'])) {
+    header("Location: login.php");
+    exit();
+}
+
+// 2. Connessione al Database
+$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+if ($conn->connect_error) {
+    die("Connessione fallita: " . $conn->connect_error);
+}
+
+// 3. Gestione delle Azioni
+$action = $_GET['action'] ?? 'dashboard';
+
+switch ($action) {
+    case 'add_device':
+        handleAddDevice($conn);
+        break;
+    case 'edit_device':
+        handleEditDevice($conn);
+        break;
+    case 'delete_device':
+        handleDeleteDevice($conn);
+        break;
+    case 'resolve_alarm':
+        handleResolveAlarm($conn);
+        break;
+    default:
+        // Mostra la dashboard
+}
+
+// 4. Funzioni di Gestione
+function handleAddDevice($conn) {
+    // Validazione e sanitizzazione
+    $ip = filter_input(INPUT_POST, 'ip', FILTER_VALIDATE_IP);
+    $type = htmlspecialchars($_POST['type']);
+    $mac = preg_replace('/[^0-9A-Fa-f]/', '', $_POST['mac']);
+    
+    // Inserimento nel database
+    $stmt = $conn->prepare("INSERT INTO dispositivi (Indirizzo_IP, Tipo_Dispositivo, Indirizzo_MAC) VALUES (?, ?, ?)");
+    $stmt->bind_param("sss", $ip, $type, $mac);
+    
+    if ($stmt->execute()) {
+        $_SESSION['message'] = "Dispositivo aggiunto con successo!";
+    } else {
+        $_SESSION['error'] = "Errore durante l'aggiunta del dispositivo";
+    }
+    
+    header("Location: dashboard.php");
+}
+
+// Altre funzioni di gestione...
+
+// 5. Recupero Dati per la Visualizzazione
+$devices = $conn->query("SELECT * FROM dispositivi ORDER BY Stato DESC");
+$alarms = $conn->query("SELECT a.*, d.Indirizzo_IP FROM allarmi a JOIN dispositivi d ON a.ID_D = d.ID_D WHERE a.Risolto = 0");
+
+// Statistiche per i grafici
+$stats = $conn->query("SELECT Stato, COUNT(*) as count FROM dispositivi GROUP BY Stato");
+$alarm_stats = $conn->query("SELECT Tipo, COUNT(*) as count FROM allarmi WHERE Risolto = 0 GROUP BY Tipo");
+
+// 6. Visualizzazione HTML
+?>
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Gestionerete</title>
+    <!-- CSS e JS -->
+</head>
+<body>
+    <!-- Interfaccia utente -->
+</body>
+</html>
+</code></pre>
+                    </div>
+                </section>
+
+                <section id="auth" class="mt-5">
+                    <h2 class="mb-4"><i class="bi bi-shield-lock me-2"></i>Sistema di Autenticazione</h2>
+                    <p>La parte iniziale del codice gestisce l'autenticazione e la sicurezza:</p>
+                    
+                    <div class="explanation-block">
+                        <h5><i class="bi bi-code-square me-2"></i>Codice Chiave</h5>
+                        <pre><code class="php">// 1. Avvio sessione e controllo autenticazione
+session_start();
+require_once 'config.php'; // Configurazioni sensibili
+
+if (!isset($_SESSION['user'])) {
+    header("Location: login.php");
+    exit();
+}
+
+// 2. Connessione sicura al database
+$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+if ($conn->connect_error) {
+    die("Connessione fallita: " . $conn->connect_error);
+}</code></pre>
+                        
+                        <h5 class="mt-3"><i class="bi bi-lightbulb me-2"></i>Spiegazione</h5>
+                        <ul>
+                            <li><strong>session_start()</strong>: Abilita la gestione delle sessioni PHP</li>
+                            <li><strong>Controllo $_SESSION['user']</strong>: Verifica che l'utente sia loggato</li>
+                            <li><strong>config.php</strong>: Le credenziali del database sono esterne per sicurezza</li>
+                            <li><strong>Connessione MySQLi</strong>: Utilizza l'estensione migliorata di MySQL</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Altre sezioni di spiegazione -->
+                <section id="crud" class="mt-5">
+                    <h2 class="mb-4"><i class="bi bi-database me-2"></i>Gestione CRUD Dispositivi</h2>
+                    <p>Il sistema implementa tutte le operazioni fondamentali sui dispositivi:</p>
+                    
+                    <ul class="nav nav-tabs mb-3" id="crudTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="create-tab" data-bs-toggle="tab" data-bs-target="#create">Create</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="read-tab" data-bs-toggle="tab" data-bs-target="#read">Read</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="update-tab" data-bs-toggle="tab" data-bs-target="#update">Update</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="delete-tab" data-bs-toggle="tab" data-bs-target="#delete">Delete</button>
+                        </li>
+                    </ul>
+                    
+                    <div class="tab-content" id="crudTabsContent">
+                        <div class="tab-pane fade show active" id="create" role="tabpanel">
+                            <div class="explanation-block">
+                                <h5><i class="bi bi-plus-circle me-2"></i>Aggiunta Dispositivo</h5>
+                                <pre><code class="php">function handleAddDevice($conn) {
+    // Validazione input
+    $ip = filter_input(INPUT_POST, 'ip', FILTER_VALIDATE_IP);
+    if (!$ip) {
+        $_SESSION['error'] = "Indirizzo IP non valido";
+        return;
+    }
+    
+    $type = htmlspecialchars($_POST['type']);
+    $mac = preg_replace('/[^0-9A-Fa-f]/', '', $_POST['mac']);
+    
+    // Prepared statement per prevenire SQL injection
+    $stmt = $conn->prepare("INSERT INTO dispositivi (...) VALUES (?, ?, ?)");
+    $stmt->bind_param("sss", $ip, $type, $mac);
+    
+    if ($stmt->execute()) {
+        $_SESSION['message'] = "Dispositivo aggiunto!";
+    } else {
+        $_SESSION['error'] = "Errore database";
+    }
+}</code></pre>
+                                <p>Questa funzione dimostra best practices importanti:</p>
+                                <ol>
+                                    <li>Validazione dell'IP con <code>filter_input()</code></li>
+                                    <li>Sanitizzazione del tipo con <code>htmlspecialchars()</code></li>
+                                    <li>Pulizia del MAC address con regex</li>
+                                    <li>Uso di prepared statements per sicurezza</li>
+                                    <li>Gestione degli errori con messaggi di sessione</li>
+                                </ol>
+                            </div>
+                        </div>
+                                <!-- Nuova Sezione: Collegamento alla Dashboard -->
+        <section id="live-demo" class="mt-5">
+            <h2 class="mb-4"><i class="bi bi-play-circle me-2"></i>Collegamento link per la dashboard</h2>
+            
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle me-2"></i>Puoi accedere alla dashboard funzionante tramite il seguente link:
+                <a href="http://localhost/gestione_rete/dashboard.php" class="alert-link" target="_blank">http://localhost/gestione_rete/dashboard.php</a>
+            </div>
+
+                </div>
+            </div>
+        </section>
+    </div>
+
+                        <!-- Altri tab panes per Read, Update, Delete -->
+                    </div>
+                </section>
+                
+                <!-- Sezioni per Allarmi e Grafici -->
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+            <p class="mb-0">Sistema di Gestione Rete Aziendale &copy; 2025</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>
+        // Attiva syntax highlighting
+        hljs.highlightAll();
+        
+        // Funzione per copiare il codice
+        function copyCode(id) {
+            const code = document.getElementById(id);
+            navigator.clipboard.writeText(code.textContent)
+                .then(() => alert('Codice copiato!'));
+        }
+    </script>
+</body>
+</html>
